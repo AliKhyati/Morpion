@@ -1,0 +1,31 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+body {
+    background-color: lightgray;
+}
+
+.grid{
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 10%;
+    position: absolute;
+}
+
+
+.png{
+    width: 9%;
+    height: 15%;
+    border: solid 1px black;
+
+}
+a{
+    position: relative;
+    left: 35%;
+    top: 40%;
+}
+.ok{
+    margin-top: 10%;
+}
+.non {
+    margin-top: 0.2%
+}

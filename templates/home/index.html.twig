@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+
+    <div class="ok">
+        <a href="{{ path('play', {x:1, y:1 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:1, y:2 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:1, y:3 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+    </div>
+    <div class="non">
+        <a href="{{ path('play', {x:2, y:1 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:2, y:2 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:2, y:3 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+    </div>
+    <div class="non">
+        <a href="{{ path('play', {x:3, y:1 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:3, y:2 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+        <a href="{{ path('play', {x:3, y:3 })}}">
+            <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
+        </a>
+    </div>
+{% endblock %}
