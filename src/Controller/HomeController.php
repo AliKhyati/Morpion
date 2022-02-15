@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Repository\GameRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/home", name="home")
+     * @Route("/", name="home")
      */
-    public function index(GameRepository $gameRepository, ManagerRegistry $doctrine): Response
+    public function index(GameRepository $gameRepository): Response
     {
-        $entityManager = $doctrine->getManager();
+
+        $game = $gameRepository->findAll();
         $checkX = $gameRepository->findBy(['type' => 'croix'],['posX' => 'ASC']);
         $checkY = $gameRepository->findBy(['type' => 'croix'],['posY' => 'ASC']);
         $checkBotX = $gameRepository->findBy(['type' => 'rond'],['posX' => 'ASC']);
@@ -26,31 +28,99 @@ class HomeController extends AbstractController
            for ($i = 2; $i < count($checkX)+2; $i++) {
                if($i < count($checkX)) {
                    if ($checkX[$i]->getPosX() === $checkX[$i - 1]->getPosX() && $checkX[$i]->getPosX() === $checkX[$i - 2]->getPosX()) {
-                       dd('x');
+                       return $this->redirectToRoute('winner');
                    }elseif ($checkY[$i]->getPosY() === $checkY[$i - 1]->getPosY() && $checkY[$i]->getPosY() === $checkY[$i - 2]->getPosY()) {
-                       dd('y');
+                       return $this->redirectToRoute('winner');
                    }elseif ($checkX[$i]->getPosX() === $checkX[$i]->getPosY() && $checkX[$i-1]->getPosX() === $checkX[$i-1]->getPosY() &&$checkX[$i-2]->getPosX() === $checkX[$i-2]->getPosY()){
-                       dd('diag ez');
-                   }elseif ($checkX[$i]->getPosX() === $checkX[$i-2]->getPosY() && $checkX[$i-1]->getPosX() === $checkX[$i-1]->getPosY() &&$checkX[$i-2]->getPosX() === $checkX[$i]->getPosY()){
-                       dd('diag not ez');
+                       return $this->redirectToRoute('winner');
+                   }elseif ($checkX[$i]->getPosX() === $checkX[$i-2]->getPosY() && $checkX[$i-1]->getPosX() === $checkX[$i-1]->getPosY() && $checkX[$i-2]->getPosX() === $checkX[$i]->getPosY() && $checkX[$i]->getPosX() === 3 && $checkX[$i]->getPosY() === 1){
+                       return $this->redirectToRoute('winner');
                    }
-                   if ($checkBotX[$i]->getPosX() === $checkBotX[$i - 1]->getPosX() && $checkBotX[$i]->getPosX() === $checkBotX[$i - 2]->getPosX()) {
-                       dd('bot x');
-                   }elseif ($checkBotY[$i]->getPosY() === $checkBotY[$i - 1]->getPosY() && $checkBotY[$i]->getPosY() === $checkBotY[$i - 2]->getPosY()) {
-                       dd('bot y');
-                   }elseif ($checkBotX[$i]->getPosX() === $checkBotX[$i]->getPosY() && $checkBotX[$i-1]->getPosX() === $checkBotX[$i-1]->getPosY() &&$checkBotX[$i-2]->getPosX() === $checkBotX[$i-2]->getPosY()){
-                       dd('bot diag ez');
-                   }elseif ($checkBotX[$i]->getPosX() === $checkBotX[$i-2]->getPosY() && $checkBotX[$i-1]->getPosX() === $checkBotX[$i-1]->getPosY() &&$checkBotX[$i-2]->getPosX() === $checkBotX[$i]->getPosY()){
-                       dd('bot diag not ez');
+                   if(count($game) <= 8) {
+                       if ($checkBotX[$i]->getPosX() === $checkBotX[$i - 1]->getPosX() && $checkBotX[$i]->getPosX() === $checkBotX[$i - 2]->getPosX()) {
+                           return $this->redirectToRoute('loser');
+                       } elseif ($checkBotY[$i]->getPosY() === $checkBotY[$i - 1]->getPosY() && $checkBotY[$i]->getPosY() === $checkBotY[$i - 2]->getPosY()) {
+                           return $this->redirectToRoute('loser');
+                       } elseif ($checkBotX[$i]->getPosX() === $checkBotX[$i]->getPosY() && $checkBotX[$i - 1]->getPosX() === $checkBotX[$i - 1]->getPosY() && $checkBotX[$i-2]->getPosX() === $checkBotX[$i - 2]->getPosY()) {
+                           return $this->redirectToRoute('loser');
+                       } elseif ($checkBotX[$i]->getPosX() === $checkBotX[$i - 2]->getPosY() && $checkBotX[$i - 1]->getPosX() === $checkBotX[$i-1]->getPosY() && $checkBotX[$i-2]->getPosX() === $checkBotX[$i]->getPosY()) {
+                           return $this->redirectToRoute('loser');
+                       }
+                   }else{
+                       return $this->redirectToRoute('draw');
+
                    }
                }
            }
        }
 
-
         return $this->render('home/index.html.twig', [
-
+            'game' => $game,
         ]);
+    }
+    /**
+     * @Route("/winner", name="winner")
+     */
+    public function winner(ManagerRegistry $doctrine): Response
+    {
+        if (!is_null($this->getUser())){
+            $entityManager = $doctrine->getManager();
+            $test = $this->getUser();
+            $test->setScore($test->getScore()+rand(1, 10));
+            $entityManager->persist($test);
+            $entityManager->flush();
+        }
+
+
+        return $this->render('home/winner.html.twig');
+
+    }
+    /**
+     * @Route("/draw", name="draw")
+     */
+    public function draw(): Response
+    {
+
+
+        return $this->render('home/draw.html.twig');
+
+    }
+    /**
+     * @Route("/classement", name="classement")
+     */
+    public function classement(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findBy([], ['score' => 'DESC']);
+        $scoreBoard = [];
+        $count = 0;
+        foreach($users as $user){
+            $name = explode('@', $user->getEmail());
+            $scoreBoard[$count][] = $name[0];
+            $scoreBoard[$count][] = $user->getScore();
+            $count++;
+        }
+
+
+        return $this->render('home/classement.html.twig', [
+            'scoreBoard' => $scoreBoard,
+        ]);
+
+    }
+    /**
+     * @Route("/loser", name="loser")
+     */
+    public function loser(ManagerRegistry $doctrine): Response
+    {
+        if (!is_null($this->getUser())) {
+            $entityManager = $doctrine->getManager();
+            $test = $this->getUser();
+            $test->setScore($test->getScore() - rand(1, 10));
+            $entityManager->persist($test);
+            $entityManager->flush();
+        }
+
+        return $this->render('home/loser.html.twig');
+
     }
 
     /**
@@ -75,7 +145,6 @@ class HomeController extends AbstractController
     {
 
         $entityManager = $doctrine->getManager();
-
         $playerRound = new Game();
         $rounds = $gameRepository->findBy([
             'posX' => $x,
@@ -101,10 +170,34 @@ class HomeController extends AbstractController
                         $possibilities[] = $positions[$i];
                     }
                 }
+                $test = $possibilities;
+                $test[] = $playerRound->getPosX() . $playerRound->getPosY();
+                sort($test);
+
                 $botRound = new Game();
-                $random = str_split($possibilities[array_rand($possibilities)]);
-                $botRound->setPosX((int)$random[0]);
-                $botRound->setPosY((int)$random[1]);
+
+                if (rand(0, 10) > 5) {
+                    if (isset($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) + 3])) {
+                        $nextOne = str_split($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) + 3]);
+                        $botRound->setPosX($nextOne[0]);
+                        $botRound->setPosY($nextOne[1]);
+                    } elseif (isset($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) - 1])) {
+                        $previousOne = str_split($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) - 1]);
+                        $botRound->setPosX($previousOne[0]);
+                        $botRound->setPosY($previousOne[1]);
+                    }
+                }else{
+                    if (isset($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) - 1])) {
+                        $previousOne = str_split($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) - 1]);
+                        $botRound->setPosX($previousOne[0]);
+                        $botRound->setPosY($previousOne[1]);
+                    }elseif (isset($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) + 3])) {
+                        $nextOne = str_split($test[array_search($playerRound->getPosX() . $playerRound->getPosY(), $test) + 3]);
+                        $botRound->setPosX($nextOne[0]);
+                        $botRound->setPosY($nextOne[1]);
+                    }
+                }
+
                 $botRound->setType('rond');
                 $entityManager->persist($botRound);
             }

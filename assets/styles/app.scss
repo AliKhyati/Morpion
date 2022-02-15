@@ -29,10 +29,43 @@ a{
 .non {
     margin-top: 0.2%
 }
-
-.cross{
+.all{
     z-index: 1;
     position: absolute;
+}
+.oneOne{
     left: 35.3%;
-    top: 28%;
+    top: 1%;
+}
+.twoOne{
+    left: 44.5%;
+    top: 1%;
+}
+.threeOne{
+    left: 53.7%;
+    top: 1%;
+}
+.oneTwo{
+    left: 35.3%;
+    top: 35%;
+}
+.twoTwo{
+    left: 44.5%;
+    top: 35%;
+}
+.threeTwo{
+    left: 53.7%;
+    top: 35%;
+}
+.oneThree{
+    left: 35.3%;
+    top: 68.5%;
+}
+.twoThree{
+    left: 44.5%;
+    top: 68.5%;
+}
+.threeThree{
+    left: 53.7%;
+    top: 68.5%;
 }

@@ -8,6 +8,53 @@
     <a href="{{ path('start') }}">Reset</a>
 <div class="position-relative">
     <div class="ok">
+        {% for round in game %}
+            {% if round.posX == 1 and round.posY == 1 and round.type == 'croix'%}
+                <img class="col-1 all oneOne" src="{{ asset('images/cross.png') }}" alt="">
+                {% elseif round.posX == 1 and round.posY == 1 and round.type == 'rond'  %}
+                    <img class="col-1 all oneOne " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 2 and round.posY == 1 and round.type == 'croix'%}
+                <img class="col-1 all twoOne" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 2 and round.posY == 1 and round.type == 'rond'  %}
+                <img class="col-1 all twoOne " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 3 and round.posY == 1 and round.type == 'croix'%}
+                <img class="col-1 all threeOne" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 3 and round.posY == 1 and round.type == 'rond'  %}
+                <img class="col-1 all threeOne " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 1 and round.posY == 2 and round.type == 'croix'%}
+                <img class="col-1 all oneTwo" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 1 and round.posY == 2 and round.type == 'rond'  %}
+                <img class="col-1 all oneTwo " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 2 and round.posY == 2 and round.type == 'croix'%}
+                <img class="col-1 all twoTwo" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 2 and round.posY == 2 and round.type == 'rond'  %}
+                <img class="col-1 all twoTwo " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 3 and round.posY == 2 and round.type == 'croix'%}
+                <img class="col-1 all threeTwo" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 3 and round.posY == 2 and round.type == 'rond'  %}
+                <img class="col-1 all threeTwo " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 1 and round.posY == 3 and round.type == 'croix'%}
+                <img class="col-1 all oneThree" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 1 and round.posY == 3 and round.type == 'rond'  %}
+                <img class="col-1 all oneThree " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 2 and round.posY == 3 and round.type == 'croix'%}
+                <img class="col-1 all twoThree" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 2 and round.posY == 3 and round.type == 'rond'  %}
+                <img class="col-1 all twoThree " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+            {% if round.posX == 3 and round.posY == 3 and round.type == 'croix'%}
+                <img class="col-1 all threeThree" src="{{ asset('images/cross.png') }}" alt="">
+            {% elseif round.posX == 3 and round.posY == 3 and round.type == 'rond'  %}
+                <img class="col-1 all threeThree " src="{{ asset('images/circle.png') }}" alt="">
+            {% endif %}
+        {% endfor %}
         <a href="{{ path('play', {x:1, y:1 })}}">
             <img class="png oui" src="{{ asset('images/grido.png') }}" alt="">
         </a>
